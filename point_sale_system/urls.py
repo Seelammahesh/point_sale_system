@@ -16,15 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from datarepo.views import add_category, list_category, update_category, delete_category,add_subcategory,list_subcategory,update_subcategory,delete_subcategory
+from datarepo.views import add_category, list_category, update_category, delete_category,add_subcategory,list_subcategory,update_subcategory,delete_subcategory,add_product,list_products,update_product,delete_product
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('add_category/',add_category,name="add_category"),
     path('list_category/',list_category,name="list_category"),
     path('update_category/',update_category,name="update_category"),
     path('delete_category/',delete_category,name="delete_category"),
+    #sub_categories
     path('add_subcategory/',add_subcategory,name="add_subcategory"),
     path('list_subcategory/',list_subcategory,name="list_subcategory"),
     path('update_subcategory/',update_subcategory,name="update_subcategory"),
-    path('delete_subcategory/',delete_subcategory,name="delete_subcategory")
+    path('delete_subcategory/',delete_subcategory,name="delete_subcategory"),
+    #products
+    path('add_product/',add_product,name="add_product"),
+    path('list_products/',list_products,name="list_products"),
+    path('update_product/',update_product,name="update_product"),
+    path('delete_product/',delete_product,name="delete_product")
+
 ]

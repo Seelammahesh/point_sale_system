@@ -1,5 +1,7 @@
-from django.db import models
+import datetime
 
+from django.db import models
+from django.db.models.fields import DateField,TimeField
 # Create your models here.
 
 class Category(models.Model):
@@ -20,6 +22,12 @@ class SubCategory(models.Model):
 
 class Product(models.Model):
     sub_category=models.ForeignKey(SubCategory,on_delete=models.SET_NULL,null=True,blank=True)
-    name=models.CharField(max_length=255)
-    price=models.IntegerField()
+    name=models.CharField(max_length=255,null=True,blank=True)
+    price=models.IntegerField(null=True,blank=True)
+    description=models.TextField(null=True,blank=True)
+    created_on=models.DateTimeField(auto_now_add=True,)
+    updated_on=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
 
