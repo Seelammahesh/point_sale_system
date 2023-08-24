@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .models import Category, SubCategory, Product
 from rest_framework.response import Response
-
+from django.db import IntegrityError
 
 
 # Create your views here.
@@ -71,6 +71,11 @@ def update_category(request):
                 'message':"category updated successfully"
             }
             return Response(context,status=status.HTTP_200_OK)
+        except IntegrityError:
+            context = {
+                'message': 'duplicate entry or invalid_id'
+            }
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
         except ValueError:
             context ={
@@ -190,6 +195,11 @@ def update_subcategory(request):
         except SubCategory.DoesNotExist:
             context ={
                 'message':'invalid subcategory_id'
+            }
+            return Response(context,status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:
+            context ={
+                'message':'duplicate entry or invalid_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
@@ -336,6 +346,11 @@ def update_product(request):
                 'message':'product not found'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:
+            context = {
+                'message': 'duplicate entry or invalid_id'
+            }
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
             context ={
                 'message':'invalid product id'
