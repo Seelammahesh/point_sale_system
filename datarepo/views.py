@@ -2,9 +2,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .models import Category, SubCategory, Product
-
 from rest_framework.response import Response
-from django.core.exceptions import ViewDoesNotExist
+
 
 
 # Create your views here.
@@ -13,7 +12,7 @@ def add_category(request):
     name = request.POST.get('name', None)
     if name is None:
         context = {
-            'message': "Name is Missing"
+            'message': "name is missing"
         }
         return Response(context, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -21,23 +20,16 @@ def add_category(request):
             new_name = Category.objects.create(name=name)
             new_name.save()
             context = {
-                'message': 'Sucessfully Added NewCategory',
+                'message': 'sucessfully added newcategory',
                 'data': {
                     'category_id': new_name.id,
                     'name': new_name.name
                 }
             }
             return Response(context, status=status.HTTP_201_CREATED)
-
-        except Category.DoesNotExist:
-            context ={
-                'message':'Invalid Name'
-
-            }
-            return Response(context,status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
             context = {
-                'message': "invalid Name"
+                'message': "invalid name"
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
@@ -54,7 +46,7 @@ def list_category(request):
         category_data.append(data)
 
     context ={
-        'category_data':category_data
+        'data':category_data
         }
     return Response( context,status=status.HTTP_200_OK)
 
@@ -66,7 +58,7 @@ def update_category(request):
     new_name = request.POST.get('name',None)
     if category_id is None:
         context={
-            'message':'Category_id is Missing'
+            'message':'category_id is missing'
 
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
@@ -76,13 +68,13 @@ def update_category(request):
             get_category.name = new_name if new_name is not None else get_category.name
             get_category.save()
             context ={
-                'message':"Category Updated Successfully"
+                'message':"category updated successfully"
             }
             return Response(context,status=status.HTTP_200_OK)
 
         except ValueError:
             context ={
-                'message':'Invalid Category_id'
+                'message':'invalid category_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
@@ -91,7 +83,7 @@ def delete_category(request):
     category_id = request.POST.get('category_id',None)
     if category_id is None:
         context ={
-            'message':'Category_id is Missing'
+            'message':'category_id is missing'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -99,18 +91,18 @@ def delete_category(request):
             get_category=Category.objects.get(id=category_id)
             get_category.delete()
             context ={
-                'message':'Category_id Sucessfully Deleted'
+                'message':'category_id sucessfully deleted'
             }
             return Response(context,status=status.HTTP_200_OK)
         except Category.DoesNotExist:
             context={
-                'message':'Invalid Category_id'
+                'message':'invalid category_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
         except ValueError:
             context ={
-                'message':'Invalid Category_id'
+                'message':'invalid category_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
@@ -121,7 +113,7 @@ def add_subcategory(request):
 
     if category_id is None:
         context={
-            'message':'Category ID is Missing'
+            'message':'category id is missing'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -129,12 +121,12 @@ def add_subcategory(request):
             category=Category.objects.get(id=category_id)
         except Category.DoesNotExist:
             context ={
-                'message':'Invalid Category_ID'
+                'message':'invalid category_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
         if name is None:
             context ={
-                'message':'Name is Missing'
+                'message':'name is missing'
 
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
@@ -145,7 +137,7 @@ def add_subcategory(request):
                 )
                 new_subcategory.save()
                 context ={
-                    'message':'New Subcategory Added SuccessFully',
+                    'message':'new subcategory added successfully',
                     'date':{
                     'subcategory_id':new_subcategory.id,
                     'category_id':category_id,
@@ -155,7 +147,7 @@ def add_subcategory(request):
                 return Response(context,status=status.HTTP_201_CREATED)
             except ValueError:
                 context ={
-                    'message': 'Invalid Name'
+                    'message': 'invalid name'
                 }
                 return  Response(context,status=status.HTTP_400_BAD_REQUEST)
 
@@ -172,7 +164,7 @@ def list_subcategory(request):
         }
         subcategories.append(temp)
         context = {
-            'subcategories': subcategories
+            'data': subcategories
         }
         return Response(context, status=status.HTTP_200_OK)
 
@@ -182,7 +174,7 @@ def update_subcategory(request):
     new_name=request.POST.get('new_name',None)
     if subcategory_id is None:
         context ={
-            'message':'Subcategory_ID is Missing'
+            'message':'subcategory_id is missing'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -191,18 +183,18 @@ def update_subcategory(request):
             get_subcategory.name=new_name if new_name is None else get_subcategory.name
             get_subcategory.save()
             context ={
-                'message':"Subcategory Updated SuccessFully"
+                'message':"subcategory updated successfully"
             }
             return Response(context,status=status.HTTP_200_OK)
 
         except SubCategory.DoesNotExist:
             context ={
-                'message':'Invalid Subcategory_ID'
+                'message':'invalid subcategory_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
             context ={
-                'message': 'Invalid Subcategory_ID'
+                'message': 'invalid subcategory_id'
             }
             return  Response(context,status=status.HTTP_400_BAD_REQUEST)
 
@@ -211,24 +203,24 @@ def delete_subcategory(request):
     subcategory_id=request.POST.get('subcategory_id',None)
     if subcategory_id is None:
         context ={
-            'message':'Subcategory_ID is Missing'
+            'message':'subcategory_id is missing'
         }
     else:
         try:
             get_subcategory=SubCategory.objects.get(id=subcategory_id)
             get_subcategory.delete()
             context ={
-                'message':'Subcategory SuccessFully deleted '
+                'message':'subcategory successuflly deleted '
             }
             return Response(context,status=status.HTTP_200_OK)
         except SubCategory.DoesNotExist:
             context ={
-                'message':'Invalid Sucategory_ID'
+                'message':'invalid sucategory_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
             context={
-                'message':'Invalid Subcategory_ID'
+                'message':'invalid Subcategory_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
@@ -254,7 +246,7 @@ def add_product(request):
             )
             new_product.save()
             context={
-                'message':'Product Added SuccessFully',
+                'message':'Product added successfully',
                 'data':{
                     'product_id':new_product.id,
                     'sub_category_id':new_product.sub_category.id,
@@ -262,15 +254,15 @@ def add_product(request):
                     'product_name':new_product.name,
                     'price':new_product.price,
                     'description':new_product.description,
-                    'created_on':new_product.created_on,
-                    'updated_on':new_product.updated_on
+                    'created_at':new_product.created_on,
+                    'updated_at':new_product.updated_on
 
                 }
             }
             return  Response(context,status=status.HTTP_200_OK)
         except ValueError:
             context ={
-                'message':'Invalid Product'
+                'message':'invalid product'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
@@ -292,55 +284,63 @@ def list_products(request):
         products.append(temp)
 
     context = {
-        'products': products
+        'data': products
     }
 
     return Response(context, status=status.HTTP_200_OK)
 
 @api_view(['PATCH'])
 def update_product(request):
-    product_id =request.POST.get('product_id',None)
-    if product_id is None:
+    product_id=request.POST.get('product_id',None)
+    subcategory_id = request.POST.get('subcategory_id',None)
+    name = request.POST.get('name', None)
+    price = request.POST.get('price', None)
+    description = request.POST.get('description', Product.description)
+    if product_id is None or subcategory_id is None or name is None or price is None or description is None:
         context ={
-            'message':'Product_ID is Missing'
+            'message':'product_id/subcategory_id/name/price/description is missing'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
         try:
-            new_product =Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
-            context ={
-                'message':'Product Not Found'
+            product =Product.objects.get(id=product_id)
 
+            subcategory_id=request.POST.get('subcategory_id',Product.sub_category_id)
+            name=request.POST.get('name',Product.name)
+            price=request.POST.get('price',Product.price)
+            description=request.POST.get('description',Product.description)
+
+            product.sub_category_id = subcategory_id
+            product.name = name
+            product.price = price
+            product.description = description
+            product.save()
+
+
+
+            context = {
+                'message': 'Product updated successfully',
+                'data': {
+                    'product_id': product.id,
+                    'subcategory_id': product.sub_category_id,
+                    'name': product.name,
+                    'price': product.price,
+                    'description': product.description,
+                    'created_at': product.created_at,
+                    'updated_at': product.updated_at
+                }
+            }
+            return Response(context, status=status.HTTP_200_OK)
+        except Product.DoesNotExist:
+            context={
+                'message':'product not found'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
-
-        subcategory_id=request.POST.get('subcategory_id',Product.sub_category_id)
-        name=request.POST.get('name',Product.name)
-        price=request.POST.get('price',Product.price)
-        description=request.POST.get('description',Product.description)
-
-        new_product.sub_category_id = subcategory_id
-        new_product.name = name
-        new_product.price = price
-        new_product.description = description
-        new_product.save()
-
-
-
-        context = {
-            'message': 'Product updated successfully',
-            'data': {
-                'product_id': new_product.id,
-                'subcategory_id': new_product.sub_category_id,
-                'name': new_product.name,
-                'price': new_product.price,
-                'description': new_product.description,
-                'created_on': new_product.created_on,
-                'updated_on': new_product.updated_on
+        except ValueError:
+            context ={
+                'message':'invalid product id'
             }
-        }
-        return Response(context, status=status.HTTP_200_OK)
+            return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
@@ -348,20 +348,20 @@ def delete_product(request):
     product_id =request.POST.get('product_id')
     if product_id is None:
         context ={
-            'message':'Product is Missing'
+            'message':'product is missing'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
         try:
-            to_delete_product_id=Product.objects.get(id=product_id)
-            to_delete_product_id.delete()
+            product_info=Product.objects.get(id=product_id)
+            product_info.delete()
             context ={
-                'message':'SuccessFully deleted Product'
+                'message':'successfully deleted Product'
             }
             return Response(context,status=status.HTTP_200_OK)
         except ValueError:
             context ={
-                'message':'Invalid Product_id'
+                'message':'invalid Product_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
 
