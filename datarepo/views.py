@@ -238,11 +238,12 @@ def delete_subcategory(request):
 def add_product(request):
     subcategory_id=request.POST.get('subcategory_id',None)
     name=request.POST.get('name',None)
+    image=request.FILES.get('image',None)
     price=request.POST.get('price',None)
     description= request.POST.get('description',None)
-    if subcategory_id is None or name is None or price is None or description is None:
+    if subcategory_id is None or name is None or image is None or price is None or description is None:
         context ={
-            'message':'subcategory_id/name/price/description is missing Please check.'
+            'message':'subcategory_id/name/image/price/description is missing Please check.'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -250,8 +251,10 @@ def add_product(request):
             new_product=Product.objects.create(
                 sub_category_id=subcategory_id,
                 name=name,
+                image=image,
                 price=price,
                 description=description
+
 
             )
             new_product.save()
@@ -262,10 +265,11 @@ def add_product(request):
                     'sub_category_id':new_product.sub_category.id,
                     'subcategory_name':new_product.sub_category.name,
                     'product_name':new_product.name,
+                    'image':new_product.image.url if new_product.image else None,
                     'price':new_product.price,
                     'description':new_product.description,
-                    'created_at':new_product.created_on,
-                    'updated_at':new_product.updated_on
+                    'created_at':new_product.created_at,
+                    'updated_at':new_product.updated_at
 
                 }
             }
@@ -288,6 +292,7 @@ def list_products(request):
             'subcategory_id': product.sub_category_id,
             'subcategory_name': subcategory_name,
             'name': product.name,
+            'image_url':product.image.url if product.image else None,
             'price': product.price,
             'description': product.description
         }
@@ -304,11 +309,12 @@ def update_product(request):
     product_id=request.POST.get('product_id',None)
     subcategory_id = request.POST.get('subcategory_id',None)
     name = request.POST.get('name', None)
+    image=request.FILES.get('image',None)
     price = request.POST.get('price', None)
     description = request.POST.get('description', Product.description)
-    if product_id is None or subcategory_id is None or name is None or price is None or description is None:
+    if product_id is None or subcategory_id is None or name is None or image is None or price is None or description is None:
         context ={
-            'message':'product_id/subcategory_id/name/price/description is missing'
+            'message':'product_id/subcategory_id/name/image/price/description is missing'
         }
         return Response(context,status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -317,11 +323,13 @@ def update_product(request):
 
             subcategory_id=request.POST.get('subcategory_id',Product.sub_category_id)
             name=request.POST.get('name',Product.name)
+            image=request.FILES.get('image',product.image)
             price=request.POST.get('price',Product.price)
             description=request.POST.get('description',Product.description)
 
             product.sub_category_id = subcategory_id
             product.name = name
+            product.image=image
             product.price = price
             product.description = description
             product.save()
@@ -335,6 +343,7 @@ def update_product(request):
                     'subcategory_id': product.sub_category_id,
                     'name': product.name,
                     'price': product.price,
+                    'image':product.image.url if product.image else None,
                     'description': product.description,
                     'created_at': product.created_at,
                     'updated_at': product.updated_at
@@ -379,6 +388,9 @@ def delete_product(request):
                 'message':'invalid Product_id'
             }
             return Response(context,status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 
